@@ -13,9 +13,10 @@ const milestones = [
 
 const financeCases = [
   {
-    icon: "📊",
+    icon: "▦",
     title: "Strategic planning and control",
     value: "Smarter decisions",
+    headline: "From reporting the past to shaping the next move.",
     impact: [
       "6.2 General Ledger Accounting (RTR)",
       "6.9 Consolidation (Group Reporting)",
@@ -27,9 +28,10 @@ const financeCases = [
     ],
   },
   {
-    icon: "💸",
+    icon: "$",
     title: "Cash and working capital management",
     value: "Stronger cash flow",
+    headline: "From reactive collection to forward-looking cash visibility.",
     impact: [
       "6.4 Accounts Payable (PTP)",
       "6.5 Accounts Receivable (OTC)",
@@ -41,9 +43,10 @@ const financeCases = [
     ],
   },
   {
-    icon: "⚙️",
+    icon: "⌁",
     title: "Cost optimization",
     value: "Lower cost",
+    headline: "From manual leakage checks to always-on spend intelligence.",
     impact: [
       "6.4 Accounts Payable (PTP)",
       "6.8 Product Costing",
@@ -53,6 +56,36 @@ const financeCases = [
       "~$40M recovered via contract leakage",
       "10% ↓ indirect spend across procurement",
     ],
+  },
+];
+
+const strategyStages = [
+  {
+    icon: "⟡",
+    label: "01",
+    year: "FY24/25",
+    title: "AI Assistant",
+    role: "Tool layer",
+    body: "Provides analysis and Q&A, assists in decision-making.",
+    signal: "Human asks. AI responds.",
+  },
+  {
+    icon: "◇",
+    label: "02",
+    year: "FY25/26 → FY27/28",
+    title: "AI Teammate",
+    role: "Workflow layer",
+    body: "Embeds in business processes, replacing selected manual work.",
+    signal: "Human directs. AI collaborates.",
+  },
+  {
+    icon: "◎",
+    label: "03",
+    year: "FY26/27 →",
+    title: "AI Twin",
+    role: "Operating layer",
+    body: "Plans and executes tasks within boundaries; humans intervene in exceptions.",
+    signal: "AI executes. Human governs.",
   },
 ];
 
@@ -198,12 +231,17 @@ function Style() {
       .avatar { width: 120px; height:120px; border-radius: 50%; border: 1px solid rgba(255,255,255,.16); display:flex; align-items:center; justify-content:center; font-size: 50px; background: rgba(255,255,255,.07); margin-bottom: 26px; }
       .caption { position:absolute; left:0; right:0; bottom:0; padding:32px; background: linear-gradient(to top, rgba(5,8,22,.95), rgba(5,8,22,.58), transparent); }
       .stages { margin-top: 70px; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 22px; }
-      .stage { position: relative; min-height: 330px; padding: 34px; overflow:hidden; }
+      .stage { position: relative; min-height: 380px; padding: 34px; overflow:hidden; }
       .stage:before { content:""; position:absolute; right:-70px; top:-90px; width:220px; height:220px; border-radius:50%; background: rgba(116,76,255,.22); filter: blur(34px); }
-      .icon { position: relative; width: 58px; height: 58px; border-radius: 20px; display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); font-size: 28px; }
-      .year { position:relative; margin-top: 44px; color: rgba(255,255,255,.43); font-size: 12px; letter-spacing:.24em; text-transform: uppercase; font-weight:800; }
-      .stage h3 { position:relative; margin-top: 12px; color:white; }
+      .stage:after { content:""; position:absolute; left:34px; right:34px; bottom:88px; height:1px; background:linear-gradient(90deg, rgba(177,240,255,.45), transparent); }
+      .icon { position: relative; width: 58px; height: 58px; border-radius: 20px; display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); font-size: 28px; font-weight: 800; color: #b1f0ff; }
+      .stageTop { position: relative; display:flex; align-items:center; justify-content:space-between; }
+      .stageNo { color:rgba(255,255,255,.24); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; letter-spacing:.2em; }
+      .year { position:relative; margin-top: 34px; color: rgba(255,255,255,.43); font-size: 12px; letter-spacing:.24em; text-transform: uppercase; font-weight:800; }
+      .role { position:relative; margin-top: 14px; color:#b1f0ff; font-size:13px; letter-spacing:.16em; text-transform:uppercase; font-weight:800; }
+      .stage h3 { position:relative; margin-top: 10px; color:white; }
       .stage p { position:relative; margin-top: 18px; color: rgba(255,255,255,.58); font-size: 18px; line-height:1.48; }
+      .signal { position:absolute; left:34px; right:34px; bottom:30px; color:rgba(255,255,255,.72); font-size:15px; font-weight:700; }
       .timeline { margin-top: 66px; display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 18px; }
       .mile { min-height: 216px; padding: 25px; border-radius: 28px; border: 1px solid rgba(255,255,255,.11); background: rgba(255,255,255,.055); position:relative; }
       .mile:after { content:""; position:absolute; right:22px; top:22px; width:8px; height:8px; border-radius:50%; background:#83efff; box-shadow: 0 0 26px #83efff; }
@@ -231,21 +269,31 @@ function Style() {
       .case h3 { margin-top:34px; font-size:26px; }
       .financeTakeaway {
         margin-top: 28px;
-        padding: 18px 22px;
+        padding: 22px 26px;
         border: 1px solid rgba(255,255,255,.12);
-        border-radius: 24px;
-        background: linear-gradient(90deg, rgba(239,68,68,.18), rgba(255,255,255,.055));
+        border-radius: 28px;
+        background: linear-gradient(90deg, rgba(239,68,68,.18), rgba(59,130,246,.09), rgba(255,255,255,.055));
         color: rgba(255,255,255,.78);
         font-size: 18px;
         line-height: 1.5;
       }
       .financeGrid { margin-top: 34px; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 22px; }
-      .financeCard { min-height: auto; padding: 28px; position: relative; overflow: hidden; }
+      .financeCard { min-height: auto; padding: 30px; position: relative; overflow: hidden; }
       .financeCard:before { content:""; position:absolute; right:-60px; top:-60px; width:170px; height:170px; border-radius:50%; background:rgba(59,130,246,.14); filter:blur(24px); }
-      .financeValue { position:relative; margin-top:16px; color:#b1f0ff; font-size:13px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
-      .financeLabel { position:relative; margin-top:20px; color:white; font-weight:800; font-size:14px; }
+      .financeCard:after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(255,255,255,.035), transparent 45%); pointer-events:none; }
+      .financeIcon { position:relative; width:60px; height:60px; border-radius:22px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.13); background:rgba(255,255,255,.07); color:#b1f0ff; font-size:28px; font-weight:850; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .financeValue { position:relative; margin-top:18px; color:#b1f0ff; font-size:13px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+      .financeHeadline { position:relative; margin-top:14px; color:rgba(255,255,255,.72); font-size:15px; line-height:1.45; }
+      .financeLabel { position:relative; margin-top:22px; color:white; font-weight:800; font-size:14px; }
       .financeList { position:relative; margin:10px 0 0; padding-left:18px; color:rgba(255,255,255,.58); line-height:1.55; font-size:14px; }
       .financeList li { margin-bottom: 5px; }
+      .bridgeGrid { margin-top: 46px; display:grid; grid-template-columns: .8fr 1.2fr; gap: 22px; align-items:stretch; }
+      .bridgePanel { border:1px solid rgba(255,255,255,.11); background:rgba(255,255,255,.06); border-radius:32px; padding:30px; backdrop-filter: blur(18px); }
+      .bridgeLabel { color:#b1f0ff; font-size:12px; letter-spacing:.18em; text-transform:uppercase; font-weight:800; }
+      .bridgeText { margin-top:18px; color:rgba(255,255,255,.72); font-size:24px; line-height:1.25; letter-spacing:-.03em; font-weight:720; }
+      .bridgeBullets { display:grid; gap:14px; }
+      .bridgeItem { border:1px solid rgba(255,255,255,.1); background:rgba(0,0,0,.16); border-radius:22px; padding:18px 20px; color:rgba(255,255,255,.67); line-height:1.45; }
+      .bridgeItem strong { color:white; }
       .moments { display:flex; flex-direction:column; gap:16px; }
       .moment { display:flex; gap:22px; padding:24px; }
       .timeIcon { width:58px; height:58px; border-radius:20px; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -270,7 +318,7 @@ function Style() {
       .finalIcon { margin: 0 auto 40px; width:86px; height:86px; border-radius:30px; display:flex; align-items:center; justify-content:center; background:#08101f; color:white; font-size:36px; box-shadow: 0 26px 70px rgba(15,23,42,.16); }
       @media (max-width: 980px) {
         .section { padding: 74px 24px; }
-        .split, .stages, .timeline, .metrics, .demos, .cases, .financeGrid { grid-template-columns: 1fr; }
+        .split, .stages, .timeline, .metrics, .demos, .cases, .financeGrid, .bridgeGrid { grid-template-columns: 1fr; }
         .cards2 { grid-template-columns: 1fr; }
         .status { display:none; }
         h1 { font-size: clamp(68px, 18vw, 110px); }
@@ -367,15 +415,20 @@ export default function FinanceAIExperience() {
 
       <Section className="gridbg" style={{ background: "#060617" }}>
         <div className="stack">
-          <Eyebrow>Enterprise AI Strategy</Eyebrow>
-          <h2>AI is evolving from assistant to teammate to twin.</h2>
+          <Eyebrow>Act II · Enterprise AI Strategy</Eyebrow>
+          <h2>AI is moving from tool to workflow to operating layer.</h2>
           <p className="lead">The vision: drive AI-native transformation, enable industry-leading ROI, and leverage Lenovo’s practice to support LPL.</p>
           <div className="stages">
-            {[
-              ["🛠️", "FY24/25", "AI Assistant", "Provides analysis and Q&A, assists in decision-making."],
-              ["🤝", "FY25/26 → FY27/28", "AI Teammate", "Embeds in business processes, replacing some manual work."],
-              ["🧍", "FY26/27 →", "AI Twin", "Plans and executes tasks within boundaries; humans intervene in exceptions."],
-            ].map(([icon, year, title, body]) => <div className="stage" key={title}><div className="icon">{icon}</div><div className="year">{year}</div><h3>{title}</h3><p>{body}</p></div>)}
+            {strategyStages.map((stage) => (
+              <div className="stage" key={stage.title}>
+                <div className="stageTop"><div className="icon">{stage.icon}</div><div className="stageNo">{stage.label}</div></div>
+                <div className="year">{stage.year}</div>
+                <div className="role">{stage.role}</div>
+                <h3>{stage.title}</h3>
+                <p>{stage.body}</p>
+                <div className="signal">{stage.signal}</div>
+              </div>
+            ))}
           </div>
         </div>
       </Section>
@@ -400,6 +453,25 @@ export default function FinanceAIExperience() {
         </div>
       </Section>
 
+      <Section className="gridbg" style={{ background: "#060617" }}>
+        <div className="stack">
+          <Eyebrow>Why this matters to Finance</Eyebrow>
+          <h2>Finance does not need more dashboards. It needs faster judgment.</h2>
+          <p className="lead">The opportunity is not only automation. It is moving from manual preparation to AI-augmented analysis, control and decision support.</p>
+          <div className="bridgeGrid">
+            <div className="bridgePanel">
+              <div className="bridgeLabel">Core shift</div>
+              <div className="bridgeText">From time spent preparing numbers to time spent explaining what should happen next.</div>
+            </div>
+            <div className="bridgeBullets">
+              <div className="bridgeItem"><strong>Speed:</strong> shorten cycle time for commentary, reconciliation and scenario analysis.</div>
+              <div className="bridgeItem"><strong>Control:</strong> surface exceptions, policy gaps and evidence earlier.</div>
+              <div className="bridgeItem"><strong>Business impact:</strong> improve planning quality, cash visibility and cost discipline.</div>
+            </div>
+          </div>
+        </div>
+      </Section>
+
       <Section id="demo" className="gridbg">
         <div className="stack">
           <Eyebrow>Live showcase</Eyebrow>
@@ -412,20 +484,21 @@ export default function FinanceAIExperience() {
 
       <Section className="gridbg" style={{ background: "#070713" }}>
         <div className="stack">
-          <Eyebrow>AI in Finance</Eyebrow>
-          <h2>AI in Finance: Driving value in Planning, Cash, Cost Mgmt.</h2>
-          <p className="lead">Drive smarter decisions, stronger cash flow, and lower cost across Finance.</p>
+          <Eyebrow>Act III · AI in Finance</Eyebrow>
+          <h2>AI in Finance: driving value in planning, cash and cost management.</h2>
+          <p className="lead">Across the industry, the strongest use cases are not abstract. They attack Finance’s highest-friction work: planning cycles, working capital visibility and cost leakage.</p>
 
           <div className="financeTakeaway">
-            <strong style={{ color: "white" }}>Takeaway:</strong> AI delivers the most value in planning & control, cash / working capital management, and cost optimization.
+            <strong style={{ color: "white" }}>Takeaway:</strong> Use AI where Finance already has clear business value pools — smarter decisions, stronger cash flow and lower cost.
           </div>
 
           <div className="financeGrid">
             {financeCases.map((item) => (
               <div className="case financeCard" key={item.title}>
-                <div className="caseIcon">{item.icon}</div>
+                <div className="financeIcon">{item.icon}</div>
                 <div className="financeValue">{item.value}</div>
                 <h3>{item.title}</h3>
+                <div className="financeHeadline">{item.headline}</div>
 
                 <div className="financeLabel">Impact to Lenovo (BCPF L2)</div>
                 <ul className="financeList">
