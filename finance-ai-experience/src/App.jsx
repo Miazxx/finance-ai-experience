@@ -102,19 +102,23 @@ function Style() {
       html { scroll-behavior: smooth; }
       body { margin: 0; background: #050816; }
       .page {
-        min-height: 100vh;
+        min-height: 100svh;
+        height: 100svh;
         background: #050816;
         color: white;
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         overflow-x: hidden;
+        overflow-y: auto;
+        scroll-snap-type: y mandatory;
       }
       .section {
         position: relative;
-        min-height: 100vh;
-        padding: 88px 7vw;
+        height: 100svh;
+        padding: 7vh 7vw;
         display: flex;
         align-items: center;
         overflow: hidden;
+        scroll-snap-align: start;
       }
       .stack { position: relative; z-index: 2; width: 100%; max-width: 1240px; margin: 0 auto; }
       .center { text-align: center; }
@@ -222,6 +226,9 @@ function Style() {
         box-shadow: 0 30px 110px rgba(42, 65, 255, .18);
       }
       .portraitImage { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 46px; }
+      .portraitPhoto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 46px; opacity: 0; transition: opacity 1.6s ease; }
+      .portraitPhoto.fadeIn { opacity: 1; }
+      .portraitPhoto.fadeOut { opacity: 0; }
       .photoText { position: absolute; inset: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 48px; color: rgba(255,255,255,.58); }
       .avatar { width: 120px; height:120px; border-radius: 50%; border: 1px solid rgba(255,255,255,.16); display:flex; align-items:center; justify-content:center; font-size: 50px; background: rgba(255,255,255,.07); margin-bottom: 26px; }
       .caption { position:absolute; left:0; right:0; bottom:0; padding:32px; background: linear-gradient(to top, rgba(5,8,22,.95), rgba(5,8,22,.58), transparent); }
@@ -386,6 +393,56 @@ function Eyebrow({ children }) {
 
 export default function FinanceAIExperience() {
   const progress = useScrollProgress();
+  const [showAltPhoto, setShowAltPhoto] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => setShowAltPhoto((value) => !value), 5200);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const sections = Array.from(document.querySelectorAll('main.page > section'));
+
+    const getCurrentIndex = () => {
+      const position = window.scrollY;
+      return sections.findIndex((section, index) => {
+        const top = section.offsetTop;
+        const nextTop = sections[index + 1]?.offsetTop ?? Number.POSITIVE_INFINITY;
+        return position >= top - 10 && position < nextTop - 10;
+      });
+    };
+
+    const scrollToSection = (index) => {
+      const target = sections[Math.max(0, Math.min(index, sections.length - 1))];
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    const onKeyDown = (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(event.key)) {
+        event.preventDefault();
+      } else {
+        return;
+      }
+
+      const currentIndex = getCurrentIndex();
+
+      if (event.key === 'ArrowDown' || event.key === 'PageDown') {
+        scrollToSection(currentIndex + 1);
+      } else if (event.key === 'ArrowUp' || event.key === 'PageUp') {
+        scrollToSection(currentIndex - 1);
+      } else if (event.key === 'Home') {
+        scrollToSection(0);
+      } else if (event.key === 'End') {
+        scrollToSection(sections.length - 1);
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown, { passive: false });
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   return (
     <main className="page" style={{ "--scroll": `${progress}%` }}>
@@ -424,7 +481,8 @@ export default function FinanceAIExperience() {
             </div>
           </div>
           <div className="portrait">
-            <MediaBlock type="image" src="robert-portrait.jpg" className="portraitImage" />
+            <MediaBlock type="image" src="Robert_Li_Avatar.jpg" className={`portraitPhoto ${showAltPhoto ? "fadeOut" : "fadeIn"}`} alt="Robert Li avatar" />
+            <MediaBlock type="image" src="Robert_Li_Profile.jpg" className={`portraitPhoto ${showAltPhoto ? "fadeIn" : "fadeOut"}`} alt="Robert Li profile" />
             <div className="caption"><div style={{ fontSize: 12, letterSpacing: ".24em", color: "#b1f0ff", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>CDTO · LENOVO</div><div style={{ marginTop: 10, fontSize: 25, fontWeight: 760, letterSpacing: "-.03em" }}>Building the enterprise AI operating layer</div></div>
           </div>
         </div>
