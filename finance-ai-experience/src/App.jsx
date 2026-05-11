@@ -90,9 +90,9 @@ const strategyStages = [
 ];
 
 const demoCards = [
-  ["AI Knowledge Assistant", "Ask enterprise policy, strategy and process questions", "GIF / VIDEO PLACEHOLDER"],
-  ["Finance Insight Generator", "Upload data → get variance narrative and risks", "DEMO PLACEHOLDER"],
-  ["Second Brain Agent", "Search final materials and generate CDTO-ready insight", "VIDEO PLACEHOLDER"],
+  ["AI Knowledge Assistant", "Ask enterprise policy, strategy and process questions", "gif", "ai-knowledge-demo.gif"],
+  ["Finance Insight Generator", "Upload data → get variance narrative and risks", "video", "finance-insight-demo.mp4"],
+  ["Second Brain Agent", "Search final materials and generate CDTO-ready insight", "video", "second-brain-demo.mp4"],
 ];
 
 function Style() {
@@ -221,12 +221,7 @@ function Style() {
         overflow: hidden;
         box-shadow: 0 30px 110px rgba(42, 65, 255, .18);
       }
-      .portrait:before {
-        content: "";
-        position: absolute;
-        inset: -30%;
-        background: radial-gradient(circle at 50% 30%, rgba(80,170,255,.26), transparent 26%), radial-gradient(circle at 70% 70%, rgba(183,92,255,.22), transparent 30%);
-      }
+      .portraitImage { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 46px; }
       .photoText { position: absolute; inset: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 48px; color: rgba(255,255,255,.58); }
       .avatar { width: 120px; height:120px; border-radius: 50%; border: 1px solid rgba(255,255,255,.16); display:flex; align-items:center; justify-content:center; font-size: 50px; background: rgba(255,255,255,.07); margin-bottom: 26px; }
       .caption { position:absolute; left:0; right:0; bottom:0; padding:32px; background: linear-gradient(to top, rgba(5,8,22,.95), rgba(5,8,22,.58), transparent); }
@@ -258,7 +253,7 @@ function Style() {
       .metricLabel { margin-top: 18px; color: rgba(15,23,42,.62); font-size: 18px; line-height:1.24; }
       .demos, .cases { margin-top: 58px; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 22px; }
       .demo { overflow:hidden; }
-      .video { position:relative; aspect-ratio:16/9; background: linear-gradient(145deg, rgba(255,255,255,.13), rgba(106,70,255,.12), rgba(0,144,255,.12)); display:flex; align-items:center; justify-content:center; flex-direction:column; }
+      .demoMedia { width: 100%; height: 100%; object-fit: cover; border-radius: 32px; }
       .video:before { content:""; position:absolute; inset:0; background-image: linear-gradient(to right, rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.1) 1px, transparent 1px); background-size:32px 32px; opacity:.25; }
       .play { position:relative; width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.2); background:rgba(0,0,0,.28); font-size:28px; }
       .tag { position:relative; margin-top:18px; padding:8px 13px; border:1px solid rgba(255,255,255,.13); border-radius:999px; background:rgba(0,0,0,.3); color:rgba(255,255,255,.65); font-size:11px; letter-spacing:.17em; font-weight:800; }
@@ -352,6 +347,28 @@ function AIStatus() {
   return <div className="status"><span className="dot" />{lines[idx]}</div>;
 }
 
+function MediaBlock({ type, src, alt = "", className = "", ...props }) {
+  const basePath = "/finance-ai-experience/assets";
+  const fullSrc = `${basePath}/${type}s/${src}`;
+
+  if (type === "image" || type === "gif" || type === "map") {
+    return <img src={fullSrc} alt={alt} className={className} {...props} />;
+  } else if (type === "video") {
+    return (
+      <video
+        src={fullSrc}
+        className={className}
+        muted
+        loop
+        autoPlay
+        playsInline
+        {...props}
+      />
+    );
+  }
+  return null;
+}
+
 function Section({ children, className = "", id }) {
   return <section id={id} className={`section ${className}`}>{children}</section>;
 }
@@ -407,7 +424,7 @@ export default function FinanceAIExperience() {
             </div>
           </div>
           <div className="portrait">
-            <div className="photoText"><div className="avatar">👤</div><strong style={{ color: "white", fontSize: 22 }}>PHOTO PLACEHOLDER</strong><span style={{ marginTop: 12, maxWidth: 360, lineHeight: 1.5 }}>Replace with Robert’s portrait. Recommended: black background, upper body, soft rim light.</span></div>
+            <MediaBlock type="image" src="robert-portrait.jpg" className="portraitImage" />
             <div className="caption"><div style={{ fontSize: 12, letterSpacing: ".24em", color: "#b1f0ff", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>CDTO · LENOVO</div><div style={{ marginTop: 10, fontSize: 25, fontWeight: 760, letterSpacing: "-.03em" }}>Building the enterprise AI operating layer</div></div>
           </div>
         </div>
@@ -477,7 +494,7 @@ export default function FinanceAIExperience() {
           <Eyebrow>Live showcase</Eyebrow>
           <h2>Don’t explain AI.<br /><span className="muted">Let people watch it work.</span></h2>
           <div className="demos">
-            {demoCards.map(([title, subtitle, tag]) => <div className="demo" key={title}><div className="video"><div className="play">▶</div><div className="tag">{tag}</div></div><div className="demoBody"><h3>{title}</h3><p>{subtitle}</p></div></div>)}
+            {demoCards.map(([title, subtitle, type, src]) => <div className="demo" key={title}><MediaBlock type={type} src={src} className="demoMedia" /><div className="demoBody"><h3>{title}</h3><p>{subtitle}</p></div></div>)}
           </div>
         </div>
       </Section>
